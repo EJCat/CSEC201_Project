@@ -4,13 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const int MAX_COMMAND_LEN = 3;
+static const int MAX_COMMAND_LEN = 4;
 
 int check_len(char*[], int);
-void upload(char*[]);
-void download(char*[]);
-void delete(char*[]);
-void change(char*[]);
-void show(char*[]);
-void history(char*[]);
-void validate(char*[]);
+int upload(char*[]);
+int download(char*[]);
+int delete(char*[]);
+int change(char*[]);
+int show(char*[]);
+int history(char*[]);
+int validate(char*[]);
