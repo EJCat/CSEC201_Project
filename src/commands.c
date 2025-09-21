@@ -55,7 +55,7 @@ int upload(char *array[MAX_COMMAND_LEN]) {
 }
 
 int download(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 3);
+    int len_diff = check_len(array, 3);
     if (len_diff != 0) {
         printf("Syntax error: download <remote filename> <local filename>\n");
         return 2;
@@ -63,7 +63,7 @@ int download(char *array[MAX_COMMAND_LEN]) {
 }
 
 int delete(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 3);
+    int len_diff = check_len(array, 3);
     if (len_diff != 0) {
         printf("Syntax error: delete <local/remote> <filename>\n");
         return 2;
@@ -82,7 +82,7 @@ int delete(char *array[MAX_COMMAND_LEN]) {
 }
 
 int change(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 3);
+    int len_diff = check_len(array, 3);
     if (len_diff != 0) {
         printf("Syntax error: change <local/remote> <filepath>\n");
         return 2;
@@ -101,7 +101,7 @@ int change(char *array[MAX_COMMAND_LEN]) {
 }
 
 int show(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 3);
+    int len_diff = check_len(array, 3);
     if (len_diff != 0) {
         printf("Syntax error: show <local/remote> <paths/files/folders>\n");
         return 2;
@@ -149,7 +149,7 @@ int show(char *array[MAX_COMMAND_LEN]) {
 }
 
 int history(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 1);
+    int len_diff = check_len(array, 1);
     if (len_diff != 0) {
         printf("Syntax error: history does not take parameters");
         return 2;
@@ -157,7 +157,7 @@ int history(char *array[MAX_COMMAND_LEN]) {
 }
 
 int validate(char *array[MAX_COMMAND_LEN]) {
-    short len_diff = check_len(array, 1);
+    int len_diff = check_len(array, 1);
     if (len_diff != 0) {
         printf("Syntax error: validate does not take parameters");
         return 2;
