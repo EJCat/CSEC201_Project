@@ -23,7 +23,6 @@ void main(void) {
         token = strtok(input, " ");
         for (int i = 0; token != NULL && i < MAX_COMMAND_LEN; i++) {   // stops if there are 4 or more args passed
             command[i] = token;
-            printf("%s\n", command[i]);
             token = strtok(NULL, " \n");
         }
         
@@ -35,9 +34,27 @@ void main(void) {
         }
         else if (strcmp(name, "upload") == 0) {
             upload(command);
-        } //add more commands
+        }
         else if (strcmp(name, "download") == 0) {
             download(command);
+        }
+        else if (strcmp(name, "delete") == 0) {
+            delete(command);
+        }
+        else if (strcmp(name, "change") == 0) {
+            change(command);
+        }
+        else if (strcmp(name, "show") == 0) {
+            show(command);
+        }
+        else if (strcmp(name, "history") == 0) {
+            history(command);
+        }
+        else if (strcmp(name, "validate") == 0) {
+            validate(command);
+        }
+        else {
+            printf("'%s' is not a valid FML command.\n", name);
         }
     }
 }
