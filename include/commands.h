@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "linkedlist.h"
 
 static const int MAX_COMMAND_LEN = 4;
 
@@ -14,5 +15,5 @@ int download(char*[]);
 int delete(char*[]);
 int change(char*[]);
 int show(char*[]);
-int history(char*[]);
+int history(char*[], struct LinkedList*);
 int validate(char*[]);

@@ -8,23 +8,26 @@ void init_ll(struct LinkedList* list) {
     list->head = NULL;
 }
 
-void prepend(struct LinkedList* list, char* command) {
+void prepend(struct LinkedList* list, char* command[]) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-    strcpy(new_node->command, command);
+    new_node->command = command;
     new_node->next = list->head;
     list->head = new_node;
     list->size++;
 }
 
-void append(struct LinkedList* list, char* command) {
+void append(struct LinkedList* list, char* command[]) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-    strcpy(new_node->command, command);
+    struct Node* temp = list->head;
+    char **cmdcpy = command;
+    new_node->command = cmdcpy;
+    new_node->next = NULL;
     
-    if (list->head == NULL) {
-        list->head == new_node;
+    if (temp == NULL) {
+        list->head = new_node;
+        return;
     }
     else {
-        struct Node* temp = list->head;
         while (temp->next != NULL) {
             temp = temp->next;
         }
@@ -41,7 +44,7 @@ void print_list(struct LinkedList* list) {
 
     int i = 1;
     while (temp != NULL) {
-        printf("  %d  %s\n", i, temp->command);
+        printf("  %d  %s\n", i, temp->command[0]);
         temp = temp->next;
         i++;
     }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "commands.h"
+#include "linkedlist.h"
 
 //Actual command function definitions
 
@@ -148,11 +149,14 @@ int show(char *array[MAX_COMMAND_LEN]) {
     }
 }
 
-int history(char *array[MAX_COMMAND_LEN]) {
+int history(char *array[MAX_COMMAND_LEN], struct LinkedList* list) {
     int len_diff = check_len(array, 1);
     if (len_diff != 0) {
         printf("Syntax error: history does not take parameters");
         return 2;
+    }
+    else {
+        print_list(list);
     }
 }
 

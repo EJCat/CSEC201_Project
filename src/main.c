@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "commands.h"
+#include "linkedlist.h"
 
 
 void main(void) {
@@ -9,6 +10,10 @@ void main(void) {
     // 'help' command not yet implemented
     printf("Enter FML command. Type 'help' for a list of commands\n");
     
+    /* Initialize history */
+    struct LinkedList *historyll = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+    init_ll(historyll);
+
     while (1) {
         //Recieve user input
         char input[255];
@@ -48,13 +53,17 @@ void main(void) {
             show(command);
         }
         else if (strcmp(name, "history") == 0) {
-            history(command);
+            history(command, historyll);
         }
         else if (strcmp(name, "validate") == 0) {
             validate(command);
         }
         else {
             printf("'%s' is not a valid FML command.\n", name);
+            continue;
         }
+        
+        /* Add command to history */
+        append(historyll, command);
     }
 }
