@@ -1,7 +1,7 @@
 #pragma once
 
 struct Node {
-    char command[200];
+    char command[255];
     struct Node* next;
 };
 
@@ -12,5 +12,6 @@ struct LinkedList {
 
 
 void init_ll(struct LinkedList*);
-void add_item(struct LinkedList*, char*);
+void prepend(struct LinkedList*, char*);
+void append(struct LinkedList*, char*);
 void print_list(struct LinkedList*);
