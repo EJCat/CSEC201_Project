@@ -53,6 +53,10 @@ int upload(char *array[MAX_COMMAND_LEN]) {
         printf("Syntax error: upload <local filename> <remote filename>\n"); 
         return 2;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int download(char *array[MAX_COMMAND_LEN]) {
@@ -61,6 +65,10 @@ int download(char *array[MAX_COMMAND_LEN]) {
         printf("Syntax error: download <remote filename> <local filename>\n");
         return 2;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int delete(char *array[MAX_COMMAND_LEN]) {
@@ -80,6 +88,10 @@ int delete(char *array[MAX_COMMAND_LEN]) {
         printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int change(char *array[MAX_COMMAND_LEN]) {
@@ -99,6 +111,10 @@ int change(char *array[MAX_COMMAND_LEN]) {
         printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int show(char *array[MAX_COMMAND_LEN]) {
@@ -147,6 +163,10 @@ int show(char *array[MAX_COMMAND_LEN]) {
         printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int history(char *array[MAX_COMMAND_LEN], struct LinkedList* list) {
@@ -158,6 +178,10 @@ int history(char *array[MAX_COMMAND_LEN], struct LinkedList* list) {
     else {
         print_list(list);
     }
+    
+    /* do stuff */
+
+    return 0;
 }
 
 int validate(char *array[MAX_COMMAND_LEN]) {
@@ -166,4 +190,8 @@ int validate(char *array[MAX_COMMAND_LEN]) {
         printf("Syntax error: validate does not take parameters");
         return 2;
     }
+    
+    /* do stuff */
+
+    return 0;
 }
