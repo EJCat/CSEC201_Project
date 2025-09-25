@@ -2,10 +2,29 @@
 #include <stdlib.h>
 #include <string.h>
 #include "linkedlist.h"
+#include "commands.h"
 
 void init_ll(struct LinkedList* list) {
     list->size = 0;
     list->head = NULL;
+}
+
+char** lstcpy(char* cmd[]) {
+    int count = 0;
+    while (cmd[count] != NULL) {
+        count++;
+    }
+    
+    char **copy = malloc((count + 1) * sizeof(char*));              /* allocate length of cmd plus null byte */
+    for (int i = 0; i < count; i++) {
+        int len = strlen(cmd[i]) + 1;           /* allocate length of string plus null byte*/
+        char *tok = malloc(len);
+        strcpy(tok, cmd[i]);
+        copy[i] = tok;
+    }
+    copy[count] = NULL;
+    
+    return copy;
 }
 
 void prepend(struct LinkedList* list, char* command[]) {
@@ -19,7 +38,7 @@ void prepend(struct LinkedList* list, char* command[]) {
 void append(struct LinkedList* list, char* command[]) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
     struct Node* temp = list->head;
-    char **cmdcpy = command;
+    char **cmdcpy = lstcpy(command);
     new_node->command = cmdcpy;
     new_node->next = NULL;
     
@@ -44,7 +63,13 @@ void print_list(struct LinkedList* list) {
 
     int i = 1;
     while (temp != NULL) {
-        printf("  %d  %s\n", i, temp->command[0]);
+        /* Print out command history in ascending order (ideally like bash history) */
+        printf("  %d  ", i);
+        for (int j = 0; temp->command[j] != NULL; j++) {
+            printf("%s ", temp->command[j]);
+        }
+        printf("\n");
+
         temp = temp->next;
         i++;
     }

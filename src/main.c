@@ -33,37 +33,42 @@ void main(void) {
         
         //Parse command
         char *name = command[0];
+        int return_code = -1;
         if (strcmp(name, "quit") == 0) {
             printf("Exiting...\n");
             break;
         }
         else if (strcmp(name, "upload") == 0) {
-            upload(command);
+            return_code = upload(command);
         }
         else if (strcmp(name, "download") == 0) {
-            download(command);
+            return_code = download(command);
         }
         else if (strcmp(name, "delete") == 0) {
-            delete(command);
+            return_code = delete(command);
         }
         else if (strcmp(name, "change") == 0) {
-            change(command);
+            return_code = change(command);
         }
         else if (strcmp(name, "show") == 0) {
-            show(command);
+            return_code = show(command);
         }
         else if (strcmp(name, "history") == 0) {
-            history(command, historyll);
+            return_code = history(command, historyll);
         }
         else if (strcmp(name, "validate") == 0) {
-            validate(command);
+            return_code = validate(command);
         }
         else {
             printf("'%s' is not a valid FML command.\n", name);
+            return_code = -1;
             continue;
         }
         
-        /* Add command to history */
-        append(historyll, command);
+        /* Add command to history if valid */
+        if (!return_code) {
+            append(historyll, command);
+            return_code = -1;
+        }
     }
 }
