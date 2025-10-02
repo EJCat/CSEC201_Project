@@ -4,9 +4,10 @@
 #include "linkedlist.h"
 
 /* Assumes NULL terminated array 
-Walks the array until it reaches NULL */
+Walks the array until it reaches NULL or provided 'max' */
 int arrnlen(char *array[], int max) {
     int count = 0;
+    if (array == NULL) { return count; }                /* Catches NULL pointers */
     for (int i = 0; i < max; i++) {
         if (array[i] == NULL) {
             break;

@@ -4,7 +4,6 @@
 #include "commands.h"
 #include "linkedlist.h"
 
-
 void main(void) {
     // Ask user for command
     // 'help' command not yet implemented
