@@ -27,14 +27,6 @@ char** lstcpy(char* cmd[]) {
     return copy;
 }
 
-void prepend(struct LinkedList* list, char* command[]) {
-    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-    new_node->command = command;
-    new_node->next = list->head;
-    list->head = new_node;
-    list->size++;
-}
-
 void append(struct LinkedList* list, char* command[]) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
     struct Node* temp = list->head;

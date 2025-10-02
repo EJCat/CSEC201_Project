@@ -3,19 +3,24 @@
 #include "commands.h"
 #include "linkedlist.h"
 
-//Actual command function definitions
-
-//Compares the length of the array with the given 'len' argument
-//Returns 0 if size matches, or the difference otherwise
-int check_len(char *array[], int len) {
+/* Assumes NULL terminated array 
+Walks the array until it reaches NULL */
+int arrnlen(char *array[], int max) {
     int count = 0;
-    for (int i=0; i < MAX_COMMAND_LEN; i++) {
-        if (array[i] != NULL) {
+    for (int i = 0; i < max; i++) {
+        if (array[i] == NULL) {
+            break;
+        } else {
             count++;
         }
     }
-    
-    return count - len;
+    return count;
+}
+
+/* Compares length of a pointer array with an expected value */
+int check_len(char *array[], int expected) {
+    int len = arrnlen(array, MAX_COMMAND_LEN);
+    return len - expected;
 }
 
 int check_location(char *array[]) {

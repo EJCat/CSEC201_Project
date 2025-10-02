@@ -7,6 +7,7 @@
 
 static const int MAX_COMMAND_LEN = 4;
 
+int arrnlen(char*[], int);
 int check_len(char*[], int);
 int check_location(char*[]);
 int listpcmp(char[], char*[], int);
