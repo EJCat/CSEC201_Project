@@ -56,7 +56,7 @@ void main(void) {
             return_code = history(command, historyll);
         }
         else if (strcmp(name, "validate") == 0) {
-            return_code = validate(command);
+            return_code = validate(historyll);
         }
         else {
             printf("'%s' is not a valid FML command.\n", name);

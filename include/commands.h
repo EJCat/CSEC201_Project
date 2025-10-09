@@ -17,4 +17,4 @@ int delete(char*[]);
 int change(char*[]);
 int show(char*[]);
 int history(char*[], struct LinkedList*);
-int validate(char*[]);
+int validate(struct LinkedList*);

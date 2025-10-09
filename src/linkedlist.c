@@ -51,11 +51,18 @@ void append(struct LinkedList* list, char* command[]) {
             temp = temp->next;
         }
         
-        
         new_node->hash = hash_node(temp);
 
         temp->next = new_node;
     }
+    list->size++;
+}
+
+void print_command(struct Node* node) {
+    for (int i = 0; node->command[i] != NULL; i++) {
+        printf("%s ", node->command[i]);
+    }
+    printf("\n");
 }
 
 void print_list(struct LinkedList* list) {
@@ -143,4 +150,62 @@ int cmphash(unsigned char* hash1, unsigned char* hash2) {
         if (hash1[i] != hash2[i]) return 0;
     }
     return 1;
+}
+
+int edit_node(struct Node* node, char** new_command, unsigned char* new_hash) {
+    if (new_command != NULL) {
+        node->command = new_command;                /* Dangerous, only use for debugging, no sanitization*/
+    }
+    if (new_hash != NULL) {
+        node->hash = new_hash;
+    }
+    return 0;
+}
+
+int del_node(struct LinkedList* list, int index) {
+    if (index >= list->size) {              /* Return -1 if index out of bounds */
+        return -1;
+    }
+    else if (index == 0) {
+        struct Node* head = list->head;
+        list->head = head->next;
+        return 0;
+    }
+    
+    struct Node* node = list->head;
+    for (int i = 0; i < index-1; i++) {             /* Fetch node right before desired index */
+        node = node->next;
+    }
+    
+    struct Node* temp = node->next;
+    node->next = temp->next;
+    free(temp);
+    return 0;
+}
+
+int validate_list(struct LinkedList* list) {
+    if (list->size == 0 || list->head == NULL) {return 0;}              /* Catch empty list */
+    else if (list->size == 1) {
+        printf("  Can't validate list of size 1\n");              /* Catch list of size 1 */
+        return -1;
+    }
+
+    struct Node* node = list->head;
+    int altered_count = 0;
+    if (!cmphash(hash(NULL), node->hash)) {             /* Validate the list head */
+        printf("Command 1 failed validation\n  >>");
+        print_command(node);
+        altered_count++;
+    }
+    while (node->next != NULL) {
+        struct Node* next_node = node->next;                /* Blockchain hashing in reverse */
+        unsigned char* rehash = hash_node(node);
+        if (!cmphash(rehash, next_node->hash)) {
+            int cmd_index = altered_count + 1;
+            printf("Command %d failed validation\n  >>", cmd_index);
+            print_command(node);
+            altered_count++;
+        }
+        node = node->next;
+    }
 }

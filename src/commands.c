@@ -190,14 +190,18 @@ int history(char *array[MAX_COMMAND_LEN], struct LinkedList* list) {
     return 0;
 }
 
-int validate(char *array[MAX_COMMAND_LEN]) {
-    int len_diff = check_len(array, 1);
-    if (len_diff != 0) {
-        printf("Syntax error: validate does not take parameters");
-        return 2;
-    }
+int validate(struct LinkedList* list) {
+    printf("TEST VALIDATION 1 START - SHOULD THROW NO ERRORS\n");
+    int code = validate_list(list);
     
-    /* do stuff */
+    del_node(list, 0);
+    printf("TEST VALIDATION 2 START - SHOULD THROW 1 ERROR\n");
+    validate_list(list);
+    
+    unsigned char* wrong_hash = hash(NULL);
+    edit_node(list->head->next->next, NULL, wrong_hash);
+    printf("TEST VALIDATION 3 START- SHOULD THROW 3 ERRORS\n");
+    int code2 = validate_list(list);
 
-    return 0;
+    return code;
 }
