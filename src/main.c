@@ -62,10 +62,10 @@ void main(void) {
             printf("TEST VALIDATION 1 START - SHOULD THROW 1 ERROR\n");
             struct LinkedList* templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
             init_ll(templist);
-            char* command0[] = {"cmd1", "arg2", "param3"};
-            char* command1[] = {"ndfdf", "jfjdj", "nbcxsa"};
-            char* command2[] = {"cmdcmdcdm", "argargarg", "parparpar"};
-            char* command3[] = {"dmcdmcdmc", "gargargar", "rparparpa"};
+            char* command0[4] = {"cmd1", "arg2", "param3", NULL};
+            char* command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};
+            char* command2[4] = {"cmdcmdcdm", "argargarg", "parparpar", NULL};
+            char* command3[4] = {"dmcdmcdmc", "gargargar", "rparparpa", NULL};
             append(templist, command0);
             append(templist, command1);
             append(templist, command2);
