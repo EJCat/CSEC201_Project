@@ -58,6 +58,54 @@ void main(void) {
         else if (strcmp(name, "validate") == 0) {
             return_code = validate(historyll);
         }
+        else if (strcmp(name, "debugcmd") == 0) {
+            printf("TEST VALIDATION 1 START - SHOULD THROW 1 ERROR\n");
+            struct LinkedList* templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+            init_ll(templist);
+            char* command0[] = {"cmd1", "arg2", "param3"};
+            char* command1[] = {"ndfdf", "jfjdj", "nbcxsa"};
+            char* command2[] = {"cmdcmdcdm", "argargarg", "parparpar"};
+            char* command3[] = {"dmcdmcdmc", "gargargar", "rparparpa"};
+            append(templist, command0);
+            append(templist, command1);
+            append(templist, command2);
+            append(templist, command3);
+            del_node(templist, 2);
+            validate(templist);
+            free(templist);
+
+            printf("TEST VALIDATION 2 START - SHOULD THROW 2 ERROR\n");
+            templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+            init_ll(templist);
+            append(templist, command0);
+            append(templist, command1);
+            append(templist, command2);
+            append(templist, command3);
+            edit_node(get_node(templist, 0), NULL, NULL);
+            free(templist);
+
+            printf("TEST VALIDATION 3 START - SHOULD THROW 3 ERROR\n");
+            templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+            init_ll(templist);
+            append(templist, command0);
+            append(templist, command1);
+            append(templist, command2);
+            append(templist, command3);
+            edit_node(get_node(templist, 0), NULL, NULL);
+            edit_node(get_node(templist, 1), NULL, NULL);
+            free(templist);
+        }
+        else if (strcmp(name, "debughash") == 0) {
+            printf("TEST VALIDATION 1 START- SHOULD THROW 2 ERRORS\n");
+            unsigned char* wrong_hash = hash(NULL);
+            edit_node(historyll->head->next, NULL, wrong_hash);
+            validate(historyll);
+
+            printf("TEST VALIDATION 2 START- SHOULD THROW 3 ERRORS\n");
+            wrong_hash = hash(NULL);
+            edit_node(historyll->head->next->next, NULL, wrong_hash);
+            validate(historyll);
+        }
         else {
             printf("'%s' is not a valid FML command.\n", name);
             return_code = -1;

@@ -181,27 +181,18 @@ int history(char *array[MAX_COMMAND_LEN], struct LinkedList* list) {
         printf("Syntax error: history does not take parameters");
         return 2;
     }
-    else {
-        print_list(list);
-    }
-    
-    /* do stuff */
 
-    return 0;
+    print_list(list);
+    validate(list);
 }
 
 int validate(struct LinkedList* list) {
-    printf("TEST VALIDATION 1 START - SHOULD THROW NO ERRORS\n");
-    int code = validate_list(list);
-    
-    del_node(list, 0);
-    printf("TEST VALIDATION 2 START - SHOULD THROW 1 ERROR\n");
-    validate_list(list);
-    
-    unsigned char* wrong_hash = hash(NULL);
-    edit_node(list->head->next->next, NULL, wrong_hash);
-    printf("TEST VALIDATION 3 START- SHOULD THROW 3 ERRORS\n");
-    int code2 = validate_list(list);
+    int index = validate_list(list);
+    if (index < 0) {
+        return 1;
+    }
+    printf("Can't validate command #%d\n  >>", index);
+    print_command(get_node(list, index));
 
-    return code;
+    return 0;
 }

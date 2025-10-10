@@ -15,6 +15,7 @@ struct LinkedList {
 void init_ll(struct LinkedList*);
 char** listcpy(char*[]);
 void append(struct LinkedList*, char*[]);
+struct Node* get_node(struct LinkedList*, int index);
 void print_command(struct Node*);
 void print_list(struct LinkedList*);
 unsigned char* hash(char**);
