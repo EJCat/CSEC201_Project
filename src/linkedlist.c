@@ -64,7 +64,7 @@ struct Node* get_node(struct LinkedList* list, int index) {
     
     struct Node* node = list->head;
     for (int i = 0; i < index; i++) {
-        struct Node* node = node->next;
+        node = node->next;
     }
     return node;
 }
@@ -217,12 +217,12 @@ int validate_list(struct LinkedList* list) {
 
     struct Node* node = list->head;
     if (!cmphash(hash(NULL), node->hash)) {             /* Validate list head */
-        return 1;
+        return 0;
     }
 
-    int index = 2;
-    while (node->next != NULL) {
-        struct Node* next_node = node->next;                /* Blockchain hashing in reverse */
+    int index = 0;
+    while (node->next != NULL) {                /* Blockchain hashing in reverse */
+        struct Node* next_node = node->next;
         unsigned char* rehash = hash_node(node);
         if (!cmphash(rehash, next_node->hash)) {
             return index;

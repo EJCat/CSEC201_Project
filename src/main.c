@@ -59,7 +59,7 @@ void main(void) {
             return_code = validate(historyll);
         }
         else if (strcmp(name, "debugcmd") == 0) {
-            printf("TEST VALIDATION 1 START - SHOULD THROW 1 ERROR\n");
+            printf("TEST VALIDATION 1 START - SHOULD THROW ERROR AT COMMAND #1 ONLY\n");
             struct LinkedList* templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
             init_ll(templist);
             char* command0[4] = {"cmd1", "arg2", "param3", NULL};
@@ -74,7 +74,7 @@ void main(void) {
             validate(templist);
             free(templist);
 
-            printf("TEST VALIDATION 2 START - SHOULD THROW 2 ERROR\n");
+            printf("TEST VALIDATION 2 START - SHOULD THROW ERROR AT COMMAND #0 ONLY\n");
             templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
             init_ll(templist);
             append(templist, command0);
@@ -82,17 +82,19 @@ void main(void) {
             append(templist, command2);
             append(templist, command3);
             edit_node(get_node(templist, 0), NULL, NULL);
+            validate(templist);
             free(templist);
 
-            printf("TEST VALIDATION 3 START - SHOULD THROW 3 ERROR\n");
+            printf("TEST VALIDATION 3 START - SHOULD THROW ERROR AT COMMAND #1 ONLY\n");
             templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
             init_ll(templist);
             append(templist, command0);
             append(templist, command1);
             append(templist, command2);
             append(templist, command3);
-            edit_node(get_node(templist, 0), NULL, NULL);
             edit_node(get_node(templist, 1), NULL, NULL);
+            edit_node(get_node(templist, 2), NULL, NULL);
+            validate(templist);
             free(templist);
         }
         else if (strcmp(name, "debughash") == 0) {
