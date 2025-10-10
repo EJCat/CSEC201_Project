@@ -98,15 +98,32 @@ void main(void) {
             free(templist);
         }
         else if (strcmp(name, "debughash") == 0) {
-            printf("TEST VALIDATION 1 START- SHOULD THROW 2 ERRORS\n");
-            unsigned char* wrong_hash = hash(NULL);
-            edit_node(historyll->head->next, NULL, wrong_hash);
-            validate(historyll);
+            printf("TEST VALIDATION 1 START - SHOULD THROW ERROR AT COMMAND #1 ONLY\n");
+            struct LinkedList* templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+            init_ll(templist);
+            char* command0[4] = {"cmd1", "arg2", "param3", NULL};
+            char* command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};
+            char* command2[4] = {"cmdcmdcdm", "argargarg", "parparpar", NULL};
+            char* command3[4] = {"dmcdmcdmc", "gargargar", "rparparpa", NULL};
+            append(templist, command0);
+            append(templist, command1);
+            append(templist, command2);
+            append(templist, command3);
+            edit_node(get_node(templist, 2), NULL, hash(NULL));
+            validate(templist);
+            free(templist);
 
-            printf("TEST VALIDATION 2 START- SHOULD THROW 3 ERRORS\n");
-            wrong_hash = hash(NULL);
-            edit_node(historyll->head->next->next, NULL, wrong_hash);
-            validate(historyll);
+            printf("TEST VALIDATION 2 START - SHOULD THROW ERROR AT COMMAND #0 ONLY\n");
+            templist = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+            init_ll(templist);
+            append(templist, command0);
+            append(templist, command1);
+            append(templist, command2);
+            append(templist, command3);
+            edit_node(get_node(templist, 1), NULL, hash(NULL));
+            edit_node(get_node(templist, 2), NULL, hash(NULL));
+            validate(templist);
+            free(templist);
         }
         else {
             printf("'%s' is not a valid FML command.\n", name);
