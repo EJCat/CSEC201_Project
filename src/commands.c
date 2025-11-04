@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "commands.h"
-#include "linkedlist.h"
 
 /* Assumes NULL terminated array 
 Walks the array until it reaches NULL or provided 'max' */

@@ -1,10 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "commands.h"
-#include "linkedlist.h"
 
-void main(void) {
+int main(void) {
+    HINSTANCE ListDll = LoadLibrary("${workspaceFolder}\\lib\\linkedlist.dll");
+    if (ListDll == NULL) {
+        printf("DLL was not loaded... Exiting.");
+        return 1;
+    }
+
+    typedef struct LinkedList {
+        int size;
+        struct Node* head;
+    } LinkedList;
+
+    typedef void (init_ll)(LinkedList*);
+    init_ll initfunc;
+    initfunc = (init_ll)GetProcAddress(ListDll, "init_ll");
+
+
     // Ask user for command
     // 'help' command not yet implemented
     printf("Enter FML command. Type 'help' for a list of commands\n");

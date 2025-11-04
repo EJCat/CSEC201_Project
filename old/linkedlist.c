@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "linkedlist.h"
-#include "commands.h"
+// #include "commands.h"
 
 /* Initializes LinkedList with default values */
 void init_ll(struct LinkedList* list) {
