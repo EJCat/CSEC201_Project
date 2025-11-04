@@ -5,6 +5,11 @@
 
 static const int MAX_COMMAND_LEN = 4;
 
+typedef struct LinkedList {
+    int size;
+    struct Node* head;
+} LinkedList;
+
 /* Assumes NULL terminated array 
 Walks the array until it reaches NULL or provided 'max' */
 int arrnlen(char *array[], int max) {
@@ -206,14 +211,12 @@ int main(void) {
         return 1;
     }
 
-    typedef struct LinkedList {
-        int size;
-        struct Node* head;
-    } LinkedList;
 
-    typedef void (init_ll)(LinkedList*);
-    init_ll initfunc;
-    initfunc = (init_ll)GetProcAddress(ListDll, "init_ll");
+    typedef void (*init_ll)(LinkedList*);
+    init_ll initfunc = (init_ll)GetProcAddress(ListDll, "init_ll");
+    
+    typedef void (*print_list)(LinkedList*);
+    print_list printfunc = (print_list)GetProcAddress(ListDll, "print_list");
 
 
     // Ask user for command
