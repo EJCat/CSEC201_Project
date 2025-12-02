@@ -1,2 +1,1 @@
--I./include
--o.bin/main.exe
+-Iinclude

@@ -2,7 +2,7 @@
 
 struct Node {
     char **command;
-    int size;
+    int count;
     unsigned char *hash;
     struct Node *next;
 };
@@ -13,8 +13,9 @@ struct LinkedList {
 };
 
 void init_ll(struct LinkedList *);
-char **listcpy(char *[]);
-void append(struct LinkedList *, char *[]);
+int arrnlen(char *[], int);
+char **chrptr_arr_cpy(char **);
+void append(struct LinkedList *, char **);
 struct Node *get_node(struct LinkedList *, int index);
 void print_command(struct Node *);
 void print_list(struct LinkedList *);

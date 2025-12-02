@@ -6,26 +6,7 @@
 #include <windows.h>
 #endif
 
-#define MAX_COMMAND_LEN 4
-
-/* Assumes NULL terminated array
-Walks the array until it reaches NULL or provided 'max' */
-int arrnlen(char *array[], int max)
-{
-    int count = 0;
-    if (array == NULL) {
-        return count;
-    } /* Catches NULL pointers */
-    for (int i = 0; i < max; i++) {
-        if (array[i] == NULL) {
-            break;
-        }
-        else {
-            count++;
-        }
-    }
-    return count;
-}
+#define MAX_COMMAND_LEN 5
 
 /* Compares length of a pointer array with an expected value */
 int check_len(char *array[], int expected)
@@ -53,13 +34,11 @@ int check_location(char *array[])
 
 int listpcmp(char search[], char *matches[], int size)
 {
-    if (check_len(matches, size) <
-        0) { // Ensure 'matches' of length 'size' or greater
+    if (check_len(matches, size) < 0) { // Ensure 'matches' of length 'size' or greater
         return size;
     }
 
-    for (int i = 0; i < size;
-         i++) { // Returns search term index in matches if found
+    for (int i = 0; i < size; i++) { // Returns search term index in matches if found
         if (strcmp(search, matches[i]) == 0) {
             return i;
         }
@@ -108,8 +87,7 @@ int delete(char *array[MAX_COMMAND_LEN])
         // do remote
     }
     else {
-        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n",
-               array[1]);
+        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
 
@@ -133,8 +111,7 @@ int change(char *array[MAX_COMMAND_LEN])
         // do remote
     }
     else {
-        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n",
-               array[1]);
+        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
 
@@ -191,8 +168,7 @@ int show(char *array[MAX_COMMAND_LEN])
         }
     }
     else {
-        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n",
-               array[1]);
+        printf("'%s' is not a valid argument. Use 'local' or 'remote'.\n", array[1]);
         return 3;
     }
 
@@ -233,8 +209,7 @@ int main(void)
     printf("Enter FML command. Type 'help' for a list of commands\n");
 
     /* Initialize history */
-    struct LinkedList *historyll =
-        (struct LinkedList *)malloc(sizeof(struct LinkedList));
+    struct LinkedList *historyll = (struct LinkedList *)malloc(sizeof(struct LinkedList));
     init_ll(historyll);
 
     while (1) {
@@ -244,15 +219,16 @@ int main(void)
         printf("\n>> ");
         fgets(input, sizeof(input), stdin);
 
-        // Split user input into array of char* pointers
+        // Split user input into array of char* pointers using char**
         // Accepts maximum of MAX_COMMAND_LEN individual substrings
-        char *command[MAX_COMMAND_LEN] = {};
+        char **command = (char **)calloc(MAX_COMMAND_LEN, sizeof(char *));
         input[strcspn(input, "\n")] = 0; // Removes newline from input
         token = strtok(input, " ");
         for (int i = 0; token != NULL && i < MAX_COMMAND_LEN;
              i++) { // stops if there are 4 or more args passed
             command[i] = token;
-            token = strtok(NULL, " \n");
+            // token = strtok(NULL, " \n");
+            token = strtok(NULL, " ");
         }
 
         // Parse command
@@ -286,8 +262,7 @@ int main(void)
         else if (strcmp(name, "debugcmd") == 0) {
             printf("TEST VALIDATION 1 START - SHOULD THROW ERROR AT COMMAND #1 "
                    "ONLY\n");
-            struct LinkedList *templist =
-                (struct LinkedList *)malloc(sizeof(struct LinkedList));
+            struct LinkedList *templist = (struct LinkedList *)malloc(sizeof(struct LinkedList));
             init_ll(templist);
             char *command0[4] = {"cmd1", "arg2", "param3", NULL};
             char *command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};
@@ -329,8 +304,7 @@ int main(void)
         else if (strcmp(name, "debughash") == 0) {
             printf("TEST VALIDATION 1 START - SHOULD THROW ERROR AT COMMAND #1 "
                    "ONLY\n");
-            struct LinkedList *templist =
-                (struct LinkedList *)malloc(sizeof(struct LinkedList));
+            struct LinkedList *templist = (struct LinkedList *)malloc(sizeof(struct LinkedList));
             init_ll(templist);
             char *command0[4] = {"cmd1", "arg2", "param3", NULL};
             char *command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};

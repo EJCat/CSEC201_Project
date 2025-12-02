@@ -10,21 +10,39 @@ void init_ll(struct LinkedList *list)
     list->head = NULL;
 }
 
+/* Assumes NULL terminated array
+Walks the array until it reaches NULL or provided 'max' */
+int arrnlen(char *array[], int max)
+{
+    int count = 0;
+    if (array == NULL) { /* Catches NULL pointers */
+        return count;
+    }
+    for (int i = 0; i < max; i++) {
+        if (array[i] == NULL) {
+            break;
+        }
+        else {
+            count++;
+        }
+    }
+    return count;
+}
+
 /* Creates a copy of a char pointer array
 Returns a char double pointer */
-char **lstcpy(char *cmd[])
+char **chrptr_arr_cpy(char **cmd)
 {
     int count = 0;
     while (cmd[count] != NULL) {
         count++;
     }
 
-    char **copy =
-        malloc((count + 1) *
-               sizeof(char *)); /* allocate length of cmd plus null byte */
+    /* allocate length of cmd plus null byte */
+    char **copy = malloc((count + 1) * sizeof(char *));
     for (int i = 0; i < count; i++) {
-        int len =
-            strlen(cmd[i]) + 1; /* allocate length of string plus null byte*/
+        /* allocate length of string plus null byte*/
+        int len = strlen(cmd[i]) + 1;
         char *tok = malloc(len);
         strcpy(tok, cmd[i]);
         copy[i] = tok;
@@ -39,13 +57,24 @@ char **lstcpy(char *cmd[])
  * Updates the hash of the previous tail node with the data of the new tail
  * node.
  */
-void append(struct LinkedList *list, char *command[])
+void append(struct LinkedList *list, char **command)
 {
+    /* Check for NULL parameters */
+    if (list == NULL || command == NULL) {
+        return;
+    }
+
+    int count = 0;
+    while (command[count] != NULL) {
+        count++;
+    }
+
     struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
     struct Node *temp = list->head;
-    char **cmdcpy = lstcpy(command);
+    char **cmdcpy = chrptr_arr_cpy(command);
     new_node->command = cmdcpy;
     new_node->hash = hash(NULL);
+    new_node->count = count;
     new_node->next = NULL;
 
     if (temp == NULL) {
@@ -66,7 +95,7 @@ void append(struct LinkedList *list, char *command[])
 
 struct Node *get_node(struct LinkedList *list, int index)
 {
-    if (index >= list->size || list->size == 0) {
+    if (index >= list->size || index < 0 || list->size == 0) {
         return NULL;
     }
     else if (index == 0) {
@@ -105,55 +134,13 @@ void print_list(struct LinkedList *list)
         /* Print out command history in ascending order (ideally like bash
          * history) */
         printf("  %d  ", i);
-        for (int j = 0; temp->command[j] != NULL; j++) {
+        for (int j = 0; j < temp->count; j++) {
             printf("%s ", temp->command[j]);
         }
-        print_hash(temp->hash); /* Debugging hashes */
-        printf("\n");
 
         temp = temp->next;
         i++;
     }
-}
-
-unsigned char *hash(char **array)
-{
-    unsigned char seeds[16] = {};
-
-    /* Fill seeds with init values */
-    for (int i = 0; i < 16; i++) {
-        seeds[i] = i + 65;
-    }
-
-    /* Do the hash thing */
-    /* Outputs 128-bit hash */
-    /* Note: this is not a very good hash function but it gets the job done
-     * (worse MD5?) */
-    int array_len = arrnlen(array, 10);
-    for (int i = 0; i < array_len; i++) {
-        for (int j = 0; j < 16; j++) {
-            int string_len = strlen(array[i]);
-            if (j % 4 == 0) {
-                seeds[j] = seeds[j] + (array[i][j % string_len] >> (j % 3));
-            }
-            else if (j % 4 == 1) {
-                seeds[j] = seeds[j] - (array[i][j % string_len] << (j % 3));
-            }
-            else if (j % 4 == 2) {
-                seeds[j] = ~(seeds[j]) | (array[i][j % string_len] >> 2);
-            }
-            else {
-                seeds[j] = ~(seeds[j]) & (array[i][j % string_len] << 1);
-            }
-        }
-    }
-
-    /* Return the hash */
-    unsigned char *hash = (unsigned char *)malloc(sizeof(unsigned char) * 16);
-    for (int i = 0; i < 16; i++) {
-        hash[i] = seeds[i];
-    }
-    return hash;
 }
 
 unsigned char *hash_node(struct Node *node)
@@ -174,22 +161,6 @@ unsigned char *hash_node(struct Node *node)
     return full_hash;
 }
 
-void print_hash(unsigned char *hash)
-{
-    for (int i = 0; i < 16; i++) {
-        printf("%x", hash[i]);
-    }
-}
-
-int cmphash(unsigned char *hash1, unsigned char *hash2)
-{
-    for (int i = 0; i < 16; i++) {
-        if (hash1[i] != hash2[i])
-            return 0;
-    }
-    return 1;
-}
-
 int edit_node(struct Node *node, char **new_command, unsigned char *new_hash)
 {
     if (new_command == NULL && new_hash == NULL) {
@@ -197,8 +168,7 @@ int edit_node(struct Node *node, char **new_command, unsigned char *new_hash)
         return 0;
     }
     if (new_command != NULL) {
-        node->command =
-            new_command; /* Dangerous, only use for debugging, no sanitization*/
+        node->command = new_command; /* Dangerous, only use for debugging, no sanitization*/
     }
     if (new_hash != NULL) {
         node->hash = new_hash;
@@ -219,8 +189,7 @@ int del_node(struct LinkedList *list, int index)
     }
 
     struct Node *node = list->head;
-    for (int i = 0; i < index - 1;
-         i++) { /* Fetch node right before desired index */
+    for (int i = 0; i < index - 1; i++) { /* Fetch node right before desired index */
         node = node->next;
     }
 
