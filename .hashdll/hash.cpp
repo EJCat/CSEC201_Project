@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined _WIN_32
+#if defined _WIN32
 #define xprt extern "C" __declspec(dllexport)
 #include <windows.h>
 #elif defined __linux__
@@ -77,9 +77,6 @@ xprt int cmphash(unsigned char *hash1, unsigned char *hash2)
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-
-    printf("Hello from DllMain");
-
     switch (ul_reason_for_call) {
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
