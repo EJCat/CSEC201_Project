@@ -30,8 +30,9 @@
                 "-fdiagnostics-color=always",
                 "-shared",
                 "-fPIC",
+                "-I.hashdll/hash.h",
                 "-o",
-                "${workspaceFolder}\\lib\\hash.dll",
+                "${workspaceFolder}\\bin\\hash.dll",
                 "${workspaceFolder}\\.hashdll\\hash.cpp"
             ],
             "options": {

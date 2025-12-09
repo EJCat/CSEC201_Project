@@ -19,7 +19,11 @@ xprt unsigned char *hash(char **array)
     }
 
     if (array == NULL) {
-        return NULL;
+        unsigned char *hash = (unsigned char *)malloc(sizeof(unsigned char) * 16);
+        for (int i = 0; i < 16; i++) {
+            hash[i] = seeds[i];
+        }
+        return hash;
     }
 
     int array_len = 0;
@@ -55,13 +59,6 @@ xprt unsigned char *hash(char **array)
         hash[i] = seeds[i];
     }
     return hash;
-}
-
-xprt void print_hash(unsigned char *hash)
-{
-    for (int i = 0; i < 16; i++) {
-        printf("%x", hash[i]);
-    }
 }
 
 xprt int cmphash(unsigned char *hash1, unsigned char *hash2)

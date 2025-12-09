@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef HASHDLL_H
+#define HASHDLL_H
+#endif
+
 /* Initializes LinkedList with default values */
 void init_ll(struct LinkedList *list)
 {
@@ -57,7 +61,7 @@ char **chrptr_arr_cpy(char **cmd)
  * Updates the hash of the previous tail node with the data of the new tail
  * node.
  */
-void append(struct LinkedList *list, char **command)
+void append(struct LinkedList *list, char **command, HashDLL *hashdll)
 {
     /* Check for NULL parameters */
     if (list == NULL || command == NULL) {
@@ -73,7 +77,7 @@ void append(struct LinkedList *list, char **command)
     struct Node *temp = list->head;
     char **cmdcpy = chrptr_arr_cpy(command);
     new_node->command = cmdcpy;
-    new_node->hash = hash(NULL);
+    new_node->hash = hashdll->hash(NULL);
     new_node->count = count;
     new_node->next = NULL;
 
@@ -86,7 +90,7 @@ void append(struct LinkedList *list, char **command)
             temp = temp->next;
         }
 
-        new_node->hash = hash_node(temp);
+        new_node->hash = hash_node(temp, hashdll);
 
         temp->next = new_node;
     }
@@ -138,19 +142,25 @@ void print_list(struct LinkedList *list)
             printf("%s ", temp->command[j]);
         }
 
+        printf(" \033[1;36m");
+        for (int i = 0; i < 16; i++) {
+            printf("%x", temp->hash[i]);
+        }
+        printf("\033[0m\n");
+
         temp = temp->next;
         i++;
     }
 }
 
-unsigned char *hash_node(struct Node *node)
+unsigned char *hash_node(struct Node *node, HashDLL *hashdll)
 {
     /*
     Computes both hashes of previous node and XOR's.
     Returns final computed hash.
     */
 
-    unsigned char *command_hash = hash(node->command);
+    unsigned char *command_hash = hashdll->hash(node->command);
     unsigned char *prev_hash = node->hash;
     unsigned char *full_hash = (unsigned char *)malloc(sizeof(char *) * 16);
     for (int i = 0; i < 16; i++) {
@@ -176,7 +186,7 @@ int edit_node(struct Node *node, char **new_command, unsigned char *new_hash)
     return 0;
 }
 
-int del_node(struct LinkedList *list, int index)
+int del_node(struct LinkedList *list, int index, HashDLL *hashdll)
 {
     if (index >= list->size) { /* Return -1 if index out of bounds */
         return -1;
@@ -184,7 +194,7 @@ int del_node(struct LinkedList *list, int index)
     else if (index == 0) {
         struct Node *head = list->head;
         list->head = head->next;
-        head->hash = hash(NULL);
+        head->hash = hashdll->hash(NULL);
         return 0;
     }
 
@@ -205,7 +215,7 @@ int del_node(struct LinkedList *list, int index)
  * Returns -2 if unable to validate
  * Returns index of unvalidated command otherwise
  */
-int validate_list(struct LinkedList *list)
+int validate_list(struct LinkedList *list, HashDLL *hashdll)
 {
     if (list->size == 0 || list->head == NULL) {
         return -2;
@@ -215,15 +225,15 @@ int validate_list(struct LinkedList *list)
     }
 
     struct Node *node = list->head;
-    if (!cmphash(hash(NULL), node->hash)) { /* Validate list head */
+    if (!hashdll->cmphash(hashdll->hash(NULL), node->hash)) { /* Validate list head */
         return 0;
     }
 
     int index = 0;
     while (node->next != NULL) { /* Blockchain hashing in reverse */
         struct Node *next_node = node->next;
-        unsigned char *rehash = hash_node(node);
-        if (!cmphash(rehash, next_node->hash)) {
+        unsigned char *rehash = hash_node(node, hashdll);
+        if (!hashdll->cmphash(rehash, next_node->hash)) {
             return index;
         }
         node = node->next;

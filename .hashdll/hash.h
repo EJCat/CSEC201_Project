@@ -1,14 +1,18 @@
-#ifndef HASHDLL_H
-#define HASHDLL_H
+#ifndef HASH_H
+#define HASH_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Declare the functions that will be exported from the DLL
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllimport)
+#ifdef HASHDLL_EXPORTS
+#define DLL_EXPORT __declspec(dllexport)
 #else
+#define DLL_EXPORT __declspec(dllimport)
+#endif
+
+#ifndef DLL_EXPORT
 #define DLL_EXPORT
 #endif
 

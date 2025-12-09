@@ -1,12 +1,19 @@
+#include "hash.h"
 #include "linkedlist.h"
+#include <errhandlingapi.h>
+#include <libloaderapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <winbase.h>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #define MAX_COMMAND_LEN 5
+
+typedef unsigned char *(__stdcall *hashfunc)(char **);
+typedef int(__stdcall *cmphashfunc)(unsigned char *, unsigned char *);
 
 /* Compares length of a pointer array with an expected value */
 int check_len(char *array[], int expected)
@@ -177,9 +184,9 @@ int show(char *array[MAX_COMMAND_LEN])
     return 0;
 }
 
-int validate(struct LinkedList *list)
+int validate(struct LinkedList *list, HashDLL *hashdll)
 {
-    int index = validate_list(list);
+    int index = validate_list(list, hashdll);
     if (index < 0) {
         return 1;
     }
@@ -189,7 +196,7 @@ int validate(struct LinkedList *list)
     return 0;
 }
 
-int history(char *array[MAX_COMMAND_LEN], struct LinkedList *list)
+int history(char *array[MAX_COMMAND_LEN], struct LinkedList *list, HashDLL *hashdll)
 {
     int len_diff = check_len(array, 1);
     if (len_diff != 0) {
@@ -198,12 +205,27 @@ int history(char *array[MAX_COMMAND_LEN], struct LinkedList *list)
     }
 
     print_list(list);
-    validate(list);
+    validate(list, hashdll);
     return 0;
 }
 
 int main(void)
 {
+    HINSTANCE hashDll = LoadLibraryA("hash.dll");
+    if (!hashDll) {
+        printf("DLL could not be loaded\n");
+        return -1;
+    }
+    HashDLL hdll;
+    hdll.hash = (hash_func_t)GetProcAddress(hashDll, "hash");
+    hdll.cmphash = (cmphash_func_t)GetProcAddress(hashDll, "cmphash");
+
+    if (!hdll.hash || !hdll.cmphash) {
+        printf("Function addresses could not be found\n");
+        FreeLibrary(hashDll);
+        return -1;
+    }
+
     // Ask user for command
     // 'help' command not yet implemented
     printf("Enter FML command. Type 'help' for a list of commands\n");
@@ -254,10 +276,10 @@ int main(void)
             return_code = show(command);
         }
         else if (strcmp(name, "history") == 0) {
-            return_code = history(command, historyll);
+            return_code = history(command, historyll, &hdll);
         }
         else if (strcmp(name, "validate") == 0) {
-            return_code = validate(historyll);
+            return_code = validate(historyll, &hdll);
         }
         else if (strcmp(name, "debugcmd") == 0) {
             printf("TEST VALIDATION 1 START - SHOULD THROW ERROR AT COMMAND #1 "
@@ -268,37 +290,37 @@ int main(void)
             char *command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};
             char *command2[4] = {"cmdcmdcdm", "argargarg", "parparpar", NULL};
             char *command3[4] = {"dmcdmcdmc", "gargargar", "rparparpa", NULL};
-            append(templist, command0);
-            append(templist, command1);
-            append(templist, command2);
-            append(templist, command3);
-            del_node(templist, 2);
-            validate(templist);
+            append(templist, command0, &hdll);
+            append(templist, command1, &hdll);
+            append(templist, command2, &hdll);
+            append(templist, command3, &hdll);
+            del_node(templist, 2, &hdll);
+            validate(templist, &hdll);
             free(templist);
 
             printf("TEST VALIDATION 2 START - SHOULD THROW ERROR AT COMMAND #0 "
                    "ONLY\n");
             templist = (struct LinkedList *)malloc(sizeof(struct LinkedList));
             init_ll(templist);
-            append(templist, command0);
-            append(templist, command1);
-            append(templist, command2);
-            append(templist, command3);
+            append(templist, command0, &hdll);
+            append(templist, command1, &hdll);
+            append(templist, command2, &hdll);
+            append(templist, command3, &hdll);
             edit_node(get_node(templist, 0), NULL, NULL);
-            validate(templist);
+            validate(templist, &hdll);
             free(templist);
 
             printf("TEST VALIDATION 3 START - SHOULD THROW ERROR AT COMMAND #1 "
                    "ONLY\n");
             templist = (struct LinkedList *)malloc(sizeof(struct LinkedList));
             init_ll(templist);
-            append(templist, command0);
-            append(templist, command1);
-            append(templist, command2);
-            append(templist, command3);
+            append(templist, command0, &hdll);
+            append(templist, command1, &hdll);
+            append(templist, command2, &hdll);
+            append(templist, command3, &hdll);
             edit_node(get_node(templist, 1), NULL, NULL);
             edit_node(get_node(templist, 2), NULL, NULL);
-            validate(templist);
+            validate(templist, &hdll);
             free(templist);
         }
         else if (strcmp(name, "debughash") == 0) {
@@ -310,25 +332,25 @@ int main(void)
             char *command1[4] = {"ndfdf", "jfjdj", "nbcxsa", NULL};
             char *command2[4] = {"cmdcmdcdm", "argargarg", "parparpar", NULL};
             char *command3[4] = {"dmcdmcdmc", "gargargar", "rparparpa", NULL};
-            append(templist, command0);
-            append(templist, command1);
-            append(templist, command2);
-            append(templist, command3);
-            edit_node(get_node(templist, 2), NULL, hash(NULL));
-            validate(templist);
+            append(templist, command0, &hdll);
+            append(templist, command1, &hdll);
+            append(templist, command2, &hdll);
+            append(templist, command3, &hdll);
+            edit_node(get_node(templist, 2), NULL, hdll.hash(NULL));
+            validate(templist, &hdll);
             free(templist);
 
             printf("TEST VALIDATION 2 START - SHOULD THROW ERROR AT COMMAND #0 "
                    "ONLY\n");
             templist = (struct LinkedList *)malloc(sizeof(struct LinkedList));
             init_ll(templist);
-            append(templist, command0);
-            append(templist, command1);
-            append(templist, command2);
-            append(templist, command3);
-            edit_node(get_node(templist, 1), NULL, hash(NULL));
-            edit_node(get_node(templist, 2), NULL, hash(NULL));
-            validate(templist);
+            append(templist, command0, &hdll);
+            append(templist, command1, &hdll);
+            append(templist, command2, &hdll);
+            append(templist, command3, &hdll);
+            edit_node(get_node(templist, 1), NULL, hdll.hash(NULL));
+            edit_node(get_node(templist, 2), NULL, hdll.hash(NULL));
+            validate(templist, &hdll);
             free(templist);
         }
         else {
@@ -339,8 +361,9 @@ int main(void)
 
         /* Add command to history if valid */
         if (!return_code) {
-            append(historyll, command);
+            append(historyll, command, &hdll);
             return_code = -1;
         }
     }
+    FreeLibrary(hashDll);
 }
